@@ -70,9 +70,9 @@ class FewShotClassifier:
                 prototype = self.compute_prototype(features)
                 self.prototypes[class_name] = prototype
                 
-                print(f"   ✅ {class_name}: {len(images)} samples → prototype shape {prototype.shape}")
+                print(f"    {class_name}: {len(images)} samples → prototype shape {prototype.shape}")
         
-        print(f"✅ Support set ready with {len(self.class_names)} classes\n")
+        print(f" Support set ready with {len(self.class_names)} classes\n")
     
     def classify(self, query_image: torch.Tensor, return_distances=False):
         """
@@ -145,7 +145,7 @@ class FewShotClassifier:
             sample_images: List of sample images [C, H, W]
         """
         if class_name in self.class_names:
-            print(f"⚠️ Class '{class_name}' đã tồn tại, sẽ cập nhật prototype")
+            print(f" Class '{class_name}' đã tồn tại, sẽ cập nhật prototype")
         
         # Tính prototype cho class mới
         with torch.no_grad():
@@ -159,7 +159,7 @@ class FewShotClassifier:
         if class_name not in self.class_names:
             self.class_names.append(class_name)
         
-        print(f"✅ Added/Updated class '{class_name}' with {len(sample_images)} samples")
+        print(f" Added/Updated class '{class_name}' with {len(sample_images)} samples")
     
     def remove_class(self, class_name: str):
         """
@@ -171,9 +171,9 @@ class FewShotClassifier:
         if class_name in self.class_names:
             del self.prototypes[class_name]
             self.class_names.remove(class_name)
-            print(f"✅ Removed class '{class_name}'")
+            print(f"Removed class '{class_name}'")
         else:
-            print(f"⚠️ Class '{class_name}' not found")
+            print(f" Class '{class_name}' not found")
     
     def get_support_info(self):
         """
@@ -199,7 +199,7 @@ class FewShotClassifier:
             'prototypes': self.prototypes,
             'class_names': self.class_names
         }, save_path)
-        print(f"✅ Prototypes saved to {save_path}")
+        print(f"Prototypes saved to {save_path}")
     
     def load_prototypes(self, load_path):
         """
@@ -211,7 +211,7 @@ class FewShotClassifier:
         checkpoint = torch.load(load_path, map_location=self.device)
         self.prototypes = checkpoint['prototypes']
         self.class_names = checkpoint['class_names']
-        print(f"✅ Prototypes loaded from {load_path}")
+        print(f" Prototypes loaded from {load_path}")
         print(f"   Loaded {len(self.class_names)} classes: {self.class_names}")
 
 
@@ -233,7 +233,7 @@ def evaluate_fewshot_accuracy(classifier: FewShotClassifier,
     per_class_correct = {name: 0 for name in test_images.keys()}
     per_class_total = {name: 0 for name in test_images.keys()}
     
-    print("\n📊 Evaluating accuracy...")
+    print("\n Evaluating accuracy...")
     
     for true_class, images in test_images.items():
         for img in images:
@@ -257,8 +257,8 @@ def evaluate_fewshot_accuracy(classifier: FewShotClassifier,
     }
     
     # In kết quả
-    print(f"✅ Overall Accuracy: {accuracy:.4f} ({correct}/{total})")
-    print("\n📈 Per-class Accuracy:")
+    print(f" Overall Accuracy: {accuracy:.4f} ({correct}/{total})")
+    print("\nPer-class Accuracy:")
     for name, acc in per_class_acc.items():
         print(f"   {name}: {acc:.4f}")
     
@@ -267,7 +267,8 @@ def evaluate_fewshot_accuracy(classifier: FewShotClassifier,
 
 if __name__ == "__main__":
     # Test code - chạy file này để kiểm tra
-    print("✅ Few-shot engine module loaded successfully")
-    print("📝 Usage:")
+    print("Few-shot engine module loaded successfully")
+    print("Usage:")
     print("   from few_shot_engine import FewShotClassifier")
+
     print("   classifier = FewShotClassifier(encoder, device)")
