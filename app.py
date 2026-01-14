@@ -1,5 +1,5 @@
 """
-🌿 Few-Shot Plant Disease Classifier
+Few-Shot Plant Disease Classifier
 Streamlit Web Application
 """
 import streamlit as st
@@ -22,7 +22,6 @@ from utils import (
 # ==================== PAGE CONFIG ====================
 st.set_page_config(
     page_title="Few-Shot Plant Disease Classifier",
-    page_icon="🌿",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -125,7 +124,7 @@ def initialize_model():
     model_path = "models/fewshot_encoder_best.pth"
     
     if not os.path.exists(model_path):
-        st.error(f"❌ Model file not found: {model_path}")
+        st.error(f" Model file not found: {model_path}")
         st.stop()
     
     model, encoder = load_fewshot_model(model_path, device)
@@ -140,7 +139,7 @@ create_temp_folder('temp')
 # --- PHẦN SỬA ĐỔI CHÍNH: TỰ ĐỘNG LOAD KHI START ---
 if 'support_set_loaded' not in st.session_state:
     # Thử load dữ liệu đã lưu từ ổ đĩa
-    with st.spinner("🚀 Đang tải dữ liệu bệnh đã lưu..."):
+    with st.spinner(" Đang tải dữ liệu bệnh đã lưu..."):
         success, loaded_classes = load_saved_support_set(classifier)
         
     if success:
@@ -154,24 +153,24 @@ if 'prediction_history' not in st.session_state:
     st.session_state.prediction_history = []
 
 # ==================== HEADER ====================
-st.markdown('<div class="main-header">🌿 Few-Shot Plant Disease Classifier</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-header"> Few-Shot Plant Disease Classifier</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub-header">Phân loại bệnh cây trồng chỉ với vài mẫu dữ liệu</div>', unsafe_allow_html=True)
 
 # ==================== SIDEBAR ====================
 with st.sidebar:
     st.image("https://via.placeholder.com/300x100/2ecc71/ffffff?text=Few-Shot+Learning", use_container_width=True)
     
-    st.markdown("## 🎯 Hướng dẫn sử dụng")
+    st.markdown("##  Hướng dẫn sử dụng")
     
     mode = st.radio(
         "Chọn chế độ:",
-        ["🚀 Quick Test", "📊 Batch Evaluation", "➕ Add New Disease", "📂 Support Set Gallery"],
+        [" Quick Test", " Batch Evaluation", " Add New Disease", "Support Set Gallery"],
         index=0
     )
     
     st.markdown("---")
     
-    st.markdown("### 📌 Thông tin hệ thống")
+    st.markdown("###  Thông tin hệ thống")
     st.info(f"""
     **Device:** {device.upper()}  
     **Model:** EfficientNet-B0  
@@ -182,33 +181,33 @@ with st.sidebar:
     if st.session_state.support_set_loaded:
         support_info = classifier.get_support_info()
         st.success(f"""
-        ✅ **Support Set Ready**  
+        **Support Set Ready**  
         Classes: {support_info['num_classes']}  
         {', '.join(support_info['class_names'][:3])}...
         """)
         
-        if st.button("🗑️ Clear Current Session"):
+        if st.button(" Clear Current Session"):
             st.session_state.support_set_loaded = False
             st.session_state.class_names = []
             classifier.prototypes = {}
             classifier.class_names = []
-            st.success("✅ Session cleared! (Dữ liệu trên ổ đĩa vẫn còn)")
+            st.success(" Session cleared! (Dữ liệu trên ổ đĩa vẫn còn)")
             st.rerun()
     else:
-        st.warning("⚠️ No support set loaded")
+        st.warning(" No support set loaded")
     
 
 # ==================== MAIN CONTENT ====================
 
 # ========== MODE 1: QUICK TEST ==========
-if mode == "🚀 Quick Test":
-    st.markdown("## 🚀 Quick Test Mode")
+if mode == " Quick Test":
+    st.markdown("##  Quick Test Mode")
     st.markdown("Upload **support images** (1-shot) và **query image** để phân loại nhanh")
     
     col1, col2 = st.columns([1, 1])
     
     with col1:
-        st.markdown("### 📤 Upload Support Set")
+        st.markdown("###  Upload Support Set")
         st.markdown("Upload 1 ảnh mẫu cho mỗi loại bệnh")
         
         num_classes = st.number_input("Số lượng classes:", min_value=2, max_value=10, value=3)
@@ -229,15 +228,15 @@ if mode == "🚀 Quick Test":
                     classifier.build_support_set(support_images)
                     st.session_state.support_set_loaded = True
                     st.session_state.class_names = list(support_images.keys())
-                st.success("✅ Support set ready!")
+                st.success(" Support set ready!")
             else:
-                st.error("❌ Please upload images for all classes")
+                st.error(" Please upload images for all classes")
     
     with col2:
-        st.markdown("### 🔍 Query & Classify")
+        st.markdown("###  Query & Classify")
         
         if not st.session_state.support_set_loaded:
-            st.warning("⚠️ Please build support set first")
+            st.warning(" Please build support set first")
         else:
             query_file = st.file_uploader("Upload query image", type=['jpg', 'jpeg', 'png'], key="query")
             
@@ -250,12 +249,12 @@ if mode == "🚀 Quick Test":
                     st.image(query_pil, caption="Query Image", use_container_width=True)
                 
                 with col_result:
-                    if st.button("🎯 Classify", key="classify"):
+                    if st.button(" Classify", key="classify"):
                         with st.spinner("Classifying..."):
                             pred_class, confidence, distances = classifier.classify(query_tensor, return_distances=True)
                         
                         # Display result
-                        st.markdown(f"### 🎯 Prediction: **{pred_class}**")
+                        st.markdown(f"###  Prediction: **{pred_class}**")
                         st.markdown(f"**Confidence:** {format_confidence(confidence)}")
                         
                         # Distance chart
@@ -270,19 +269,19 @@ if mode == "🚀 Quick Test":
                         })
 
 # ========== MODE 2: BATCH EVALUATION ==========
-elif mode == "📊 Batch Evaluation":
-    st.markdown("## 📊 Batch Evaluation Mode")
+elif mode == " Batch Evaluation":
+    st.markdown("##  Batch Evaluation Mode")
     st.markdown("Đánh giá trên nhiều images cùng lúc")
     
     col1, col2 = st.columns([1, 1])
     
     with col1:
-        st.markdown("### 📁 Load Support Set from Folder")
+        st.markdown("###  Load Support Set from Folder")
         
         support_folder = st.text_input("Đường dẫn thư mục support set:", "data/support_set")
         k_shot = st.slider("K-shot (số ảnh mỗi class):", 1, 20, 5)
         
-        if st.button("📂 Load Support Set"):
+        if st.button(" Load Support Set"):
             if os.path.exists(support_folder):
                 with st.spinner("Loading support set..."):
                     try:
@@ -291,24 +290,24 @@ elif mode == "📊 Batch Evaluation":
                         st.session_state.support_set_loaded = True
                         st.session_state.class_names = class_names
                         
-                        st.success(f"✅ Loaded {len(class_names)} classes:")
+                        st.success(f" Loaded {len(class_names)} classes:")
                         st.write(class_names)
                     except Exception as e:
-                        st.error(f"❌ Error: {e}")
+                        st.error(f" Error: {e}")
             else:
                 st.error(f"❌ Folder not found: {support_folder}")
     
     with col2:
-        st.markdown("### 📤 Upload Query Images")
+        st.markdown("###  Upload Query Images")
         
         if not st.session_state.support_set_loaded:
-            st.warning("⚠️ Please load support set first")
+            st.warning(" Please load support set first")
         else:
             query_files = st.file_uploader("Upload multiple query images", 
                                           type=['jpg', 'jpeg', 'png'], 
                                           accept_multiple_files=True)
             
-            if query_files and st.button("🎯 Batch Classify"):
+            if query_files and st.button(" Batch Classify"):
                 results = []
                 query_images = []
                 
@@ -328,11 +327,11 @@ elif mode == "📊 Batch Evaluation":
                     progress_bar.progress((i + 1) / len(query_files))
                 
                 # Display results table
-                st.markdown("### 📋 Results")
+                st.markdown("###  Results")
                 st.dataframe(results, use_container_width=True)
                 
                 # Display images grid
-                st.markdown("### 🖼️ Images Preview")
+                st.markdown("### Images Preview")
                 titles = [f"{r['prediction']} ({r['confidence']:.2%})" for r in results]
                 fig = display_sample_grid(query_images, titles, max_images=9)
                 st.pyplot(fig)
@@ -341,7 +340,7 @@ elif mode == "📊 Batch Evaluation":
                 import pandas as pd
                 df = pd.DataFrame(results)
                 csv = df.to_csv(index=False)
-                st.download_button("💾 Download Results (CSV)", csv, "results.csv", "text/csv")
+                st.download_button(" Download Results (CSV)", csv, "results.csv", "text/csv")
 
 # ========== MODE 3: ADD NEW DISEASE ==========
 elif mode == "➕ Add New Disease":
@@ -351,7 +350,7 @@ elif mode == "➕ Add New Disease":
     col1, col2 = st.columns([1, 1])
     
     with col1:
-        st.markdown("### 📝 Disease Information")
+        st.markdown("###  Disease Information")
         # Gợi ý các tên bệnh đã có để người dùng dễ chọn nếu muốn cập nhật
         existing_classes = st.session_state.class_names
         st.write(f"Bệnh hiện có: {', '.join(st.session_state.class_names) if st.session_state.class_names else 'Chưa có'}")
@@ -361,18 +360,18 @@ elif mode == "➕ Add New Disease":
         # Kiểm tra xem bệnh đã tồn tại chưa
         is_existing = new_disease_name in existing_classes
         if is_existing:
-            st.warning(f"⚠️ Bệnh '{new_disease_name}' đã tồn tại. Ảnh mới sẽ được thêm vào bộ dữ liệu cũ.")
+            st.warning(f" Bệnh '{new_disease_name}' đã tồn tại. Ảnh mới sẽ được thêm vào bộ dữ liệu cũ.")
         
         new_disease_desc = st.text_area("Mô tả (optional):", "")
         
-        st.markdown("### 📤 Upload Sample Images")
+        st.markdown("### Upload Sample Images")
         sample_files = st.file_uploader("Upload thêm ảnh mẫu", 
                                        type=['jpg', 'jpeg', 'png'],
                                        accept_multiple_files=True,
                                        key="new_disease_samples")
         
         if sample_files:
-            st.success(f"✅ {len(sample_files)} images prepared")
+            st.success(f" {len(sample_files)} images prepared")
             
             sample_images = []
             sample_tensors = []
@@ -383,7 +382,7 @@ elif mode == "➕ Add New Disease":
             
             st.pyplot(display_sample_grid(sample_images, max_images=6))
             
-            btn_label = "🔄 Update Disease" if is_existing else "➕ Add to System"
+            btn_label = " Update Disease" if is_existing else " Add to System"
             
             if st.button(btn_label):
                 if new_disease_name:
@@ -428,15 +427,15 @@ elif mode == "➕ Add New Disease":
                         with open(os.path.join(save_path, "metadata.json"), 'w', encoding='utf-8') as f:
                             json.dump(metadata, f, indent=2, ensure_ascii=False)
                             
-                    st.success(f"✅ Đã cập nhật thành công bệnh '{new_disease_name}'! Tổng số ảnh hiện tại: {len(all_tensors)}")
+                    st.success(f"Đã cập nhật thành công bệnh '{new_disease_name}'! Tổng số ảnh hiện tại: {len(all_tensors)}")
                 else:
-                    st.error("❌ Vui lòng nhập tên bệnh")
+                    st.error(" Vui lòng nhập tên bệnh")
 # ========== MODE 4: SUPPORT SET GALLERY ==========
-elif mode == "📂 Support Set Gallery":
-    st.markdown("## 📂 Support Set Gallery")
+elif mode == "Support Set Gallery":
+    st.markdown("## Support Set Gallery")
     
     if not st.session_state.class_names:
-        st.warning("⚠️ Hiện chưa có loại bệnh nào được nạp vào hệ thống.")
+        st.warning("Hiện chưa có loại bệnh nào được nạp vào hệ thống.")
     else:
         selected_disease = st.selectbox("Chọn loại bệnh:", st.session_state.class_names)
 
@@ -448,7 +447,7 @@ elif mode == "📂 Support Set Gallery":
             col1, col2 = st.columns([1, 2])
 
             with col1:
-                st.markdown("### 📋 Thông tin")
+                st.markdown("###  Thông tin")
                 if os.path.exists(metadata_path):
                     with open(metadata_path, 'r', encoding='utf-8') as f:
                         meta = json.load(f)
@@ -465,7 +464,7 @@ elif mode == "📂 Support Set Gallery":
                     st.warning("Bệnh này không có file metadata.json")
 
             with col2:
-                st.markdown("### 🖼️ Ảnh mẫu ngẫu nhiên (Random 3)")
+                st.markdown("###  Ảnh mẫu ngẫu nhiên (Random 3)")
                 sample_imgs = []
                 if os.path.exists(base_path):
                     valid_extensions = ('.png', '.jpg', '.jpeg')
@@ -493,22 +492,23 @@ st.markdown("---")
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    st.markdown("### 📊 Statistics")
+    st.markdown("###  Statistics")
     if st.session_state.prediction_history:
         st.metric("Total Predictions", len(st.session_state.prediction_history))
     else:
         st.metric("Total Predictions", 0)
 
 with col2:
-    st.markdown("### 🎯 Classes")
+    st.markdown("###  Classes")
     st.metric("Loaded Classes", len(st.session_state.class_names))
 
 with col3:
-    st.markdown("### 🔋 System")
+    st.markdown("###  System")
     st.metric("Device", device.upper())
 
 # Prediction history
 if st.session_state.prediction_history:
-    with st.expander("📜 View Prediction History"):
+    with st.expander(" View Prediction History"):
         for i, pred in enumerate(reversed(st.session_state.prediction_history[-10:])):
+
             st.text(f"{pred['timestamp']} | {pred['prediction']} | {pred['confidence']:.2%}")
